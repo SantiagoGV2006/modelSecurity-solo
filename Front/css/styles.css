@@ -1,0 +1,159 @@
+/* Table-like Layout Styles */
+:root {
+  --border-color: #e0e0e0;
+  --header-bg: #f8f9fa;
+  --scroll-thumb-color: #6c757d;
+}
+
+/* Container Modifications */
+.container-fluid {
+  padding: 20px;
+}
+
+/* Card Modifications for Table-like Layout */
+.data-table-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+.data-table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: var(--header-bg);
+  padding: 15px;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.data-table-header h4 {
+  margin: 0;
+  font-weight: 600;
+}
+
+.data-table-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.data-table-search input {
+  padding: 8px 12px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.data-table-search input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.data-table-container {
+  max-height: 500px;
+  overflow-y: auto;
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.data-table thead {
+  position: sticky;
+  top: 0;
+  background-color: var(--header-bg);
+  z-index: 10;
+}
+
+.data-table th, 
+.data-table td {
+  padding: 12px 15px;
+  border-bottom: 1px solid var(--border-color);
+  white-space: nowrap;
+}
+
+.data-table th {
+  font-weight: 600;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: var(--dark);
+}
+
+.data-table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+  transition: background-color 0.3s ease;
+}
+
+/* Custom Scrollbar */
+.data-table-container::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+.data-table-container::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.data-table-container::-webkit-scrollbar-thumb {
+  background-color: var(--scroll-thumb-color);
+  border-radius: 5px;
+}
+
+.data-table-container::-webkit-scrollbar-thumb:hover {
+  background-color: #555;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .data-table-header {
+      flex-direction: column;
+      gap: 10px;
+  }
+  
+  .data-table-search {
+      width: 100%;
+  }
+}
+
+/* Action Buttons Styling */
+.action-buttons {
+  display: flex;
+  gap: 5px;
+  justify-content: center;
+}
+
+.action-btn {
+  padding: 6px 10px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.action-btn i {
+  margin-right: 5px;
+}
+
+.action-btn-view {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.action-btn-edit {
+  background-color: #28a745;
+  color: white;
+}
+
+.action-btn-delete {
+  background-color: #dc3545;
+  color: white;
+}
+
+.action-btn:hover {
+  opacity: 0.8;
+}

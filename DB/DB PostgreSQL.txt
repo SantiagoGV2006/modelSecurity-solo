@@ -1,0 +1,143 @@
+CREATE DATABASE securitypqrdb;
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    email TEXT NOT NULL,
+    password TEXT NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    delete_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE rols (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    delete_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE forms (
+    id SERIAL PRIMARY KEY,
+    name TEXT NOT NULL,
+    code TEXT NOT NULL,
+    active BOOLEAN NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    delete_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE models (
+    id SERIAL PRIMARY KEY,
+    code TEXT NOT NULL,
+    name TEXT NOT NULL,
+    active TEXT NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    delete_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE forms_models (
+    id SERIAL PRIMARY KEY,
+    form_id INTEGER NOT NULL REFERENCES forms(id),
+    module_id INTEGER NOT NULL REFERENCES models(id)
+);
+
+
+CREATE TABLE rols_users (
+    id SERIAL PRIMARY KEY,
+    rol_id INTEGER NOT NULL REFERENCES rols(id),
+    user_id INTEGER NOT NULL REFERENCES users(id)
+);
+
+CREATE TABLE permissions (
+    id SERIAL PRIMARY KEY,
+    can_read TEXT NOT NULL,
+    can_create TEXT NOT NULL,
+    can_update TEXT NOT NULL,
+    can_delete TEXT NOT NULL,
+    create_at TIMESTAMP NOT NULL,
+    delete_at TIMESTAMP NOT NULL
+);
+
+CREATE TABLE rol_form_permissionset (
+    id SERIAL PRIMARY KEY,
+    rol_id INTEGER NOT NULL REFERENCES rols(id),
+    form_id INTEGER NOT NULL REFERENCES forms(id),
+    permission_id INTEGER NOT NULL REFERENCES permissions(id)
+);
+
+CREATE TABLE change_logset (
+    id SERIAL PRIMARY KEY
+);
+
+CREATE TABLE workers (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    identity_document TEXT NOT NULL,
+    job_title TEXT NOT NULL,
+    email TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    hire_date TEXT NOT NULL
+);
+
+CREATE TABLE clients (
+    id SERIAL PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL,
+    identity_document TEXT NOT NULL,
+    client_type TEXT NOT NULL,
+    phone TEXT NOT NULL,
+    email TEXT NOT NULL,
+    address TEXT NOT NULL,
+    socioeconomic_stratification TEXT NOT NULL,
+    registration_date TEXT NOT NULL
+);
+
+CREATE TABLE pqrset (
+    id SERIAL PRIMARY KEY,
+    pqr_type TEXT NOT NULL,
+    description TEXT NOT NULL,
+    creation_date TEXT NOT NULL,
+    pqr_status TEXT NOT NULL,
+    resolution_date TEXT NOT NULL
+);
+
+CREATE TABLE logins (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL
+);
+
+CREATE TABLE workers_logins (
+    id SERIAL PRIMARY KEY,
+    username TEXT NOT NULL,
+    password TEXT NOT NULL,
+    creation_date TEXT NOT NULL,
+    status TEXT NOT NULL,
+    login_id INTEGER NOT NULL REFERENCES logins(id),
+    worker_id INTEGER NOT NULL REFERENCES workers(id)
+);
+
+CREATE TABLE pqrworker (
+    pqr_id INTEGER NOT NULL REFERENCES pqrset(id),
+    worker_id INTEGER NOT NULL REFERENCES workers(id),
+    PRIMARY KEY (pqr_id, worker_id)
+);
+
+CREATE TABLE pqrclient (
+    pqr_id INTEGER NOT NULL REFERENCES pqrset(id),
+    client_id INTEGER NOT NULL REFERENCES clients(id),
+    PRIMARY KEY (pqr_id, client_id)
+);
+
+-- Creación de índices para un mejor rendimiento
+CREATE INDEX ix_form_model_form ON formsmodels (form_id);
+CREATE INDEX ix_form_module_module ON formsmodels (module_id);
+CREATE INDEX ix_rol_user_rol ON rols_users (rol_id);
+CREATE INDEX ix_rol_user_user ON rols_users (user_id);
+CREATE INDEX ix_rol_form_permission_rol ON rol_form_permissionset (rol_id);
+CREATE INDEX ix_rol_form_permission_form ON rol_form_permissionset (form_id);
+CREATE INDEX ix_rol_form_permission_permission ON rol_form_permissionset (permission_id);
+CREATE INDEX ix_worker_login_login ON workers_logins (login_id);
+CREATE INDEX ix_worker_login_worker ON workers_logins (worker_id);
+CREATE INDEX ix_pqr_worker_worker ON pqrworker (worker_id);
+CREATE INDEX ix_pqr_client_client ON pqrclient (client_id);

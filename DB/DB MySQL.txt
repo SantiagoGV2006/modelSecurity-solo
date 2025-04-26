@@ -1,0 +1,150 @@
+CREATE DATABASE SecurityPQRDB;
+
+CREATE TABLE `Users` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Username` TEXT NOT NULL,
+    `Email` TEXT NOT NULL,
+    `Password` TEXT NOT NULL,
+    `CreateAt` DATETIME NOT NULL,
+    `DeleteAt` DATETIME NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Rols` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Name` TEXT NOT NULL,
+    `CreateAt` DATETIME NOT NULL,
+    `DeleteAt` DATETIME NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `forms` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Name` TEXT NOT NULL,
+    `Code` TEXT NOT NULL,
+    `Active` BOOLEAN NOT NULL,
+    `CreateAt` DATETIME NOT NULL,
+    `DeleteAt` DATETIME NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Models` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Code` TEXT NOT NULL,
+    `Name` TEXT NOT NULL,
+    `Active` TEXT NOT NULL,
+    `CreateAt` DATETIME NOT NULL,
+    `DeleteAt` DATETIME NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Rols_Users` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `RolId_Id` INT NOT NULL,
+    `UserId_Id` INT NOT NULL,
+    PRIMARY KEY (`Id`),
+    INDEX `IX_FK_Rol_UserRol` (`RolId_Id`),
+    INDEX `IX_FK_Rol_UserUser` (`UserId_Id`),
+    CONSTRAINT `FK_Rol_UserRol` FOREIGN KEY (`RolId_Id`) REFERENCES `Rols` (`Id`),
+    CONSTRAINT `FK_Rol_UserUser` FOREIGN KEY (`UserId_Id`) REFERENCES `Users` (`Id`)
+)
+CREATE TABLE `FormsModels` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `FormId_Id` INT NOT NULL,
+    `ModuleId_Id` INT NOT NULL,
+    PRIMARY KEY (`Id`),
+    INDEX `IX_FK_FormModelForm` (`FormId_Id`),
+    INDEX `IX_FK_FormModuleModule` (`ModuleId_Id`),
+    CONSTRAINT `FK_FormModelForm` FOREIGN KEY (`FormId_Id`) REFERENCES `forms` (`Id`),
+    CONSTRAINT `FK_FormModuleModule` FOREIGN KEY (`ModuleId_Id`) REFERENCES `Models` (`Id`)
+)
+CREATE TABLE `Permissions` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Can_Read` TEXT NOT NULL,
+    `Can_Create` TEXT NOT NULL,
+    `Can_Update` TEXT NOT NULL,
+    `Can_Delete` TEXT NOT NULL,
+    `CreateAt` DATETIME NOT NULL,
+    `DeleteAt` DATETIME NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Rol_Form_PermissionSet` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `RolId_Id` INT NOT NULL,
+    `FormId_Id` INT NOT NULL,
+    `PermissionId_Id` INT NOT NULL,
+    PRIMARY KEY (`Id`),
+    INDEX `IX_FK_Rol_Form_PermissionRol` (`RolId_Id`),
+    INDEX `IX_FK_Rol_Form_PermissionForm` (`FormId_Id`),
+    INDEX `IX_FK_Rol_Form_PermissionPermission` (`PermissionId_Id`),
+    CONSTRAINT `FK_Rol_Form_PermissionRol` FOREIGN KEY (`RolId_Id`) REFERENCES `Rols` (`Id`),
+    CONSTRAINT `FK_Rol_Form_PermissionForm` FOREIGN KEY (`FormId_Id`) REFERENCES `forms` (`Id`),
+    CONSTRAINT `FK_Rol_Form_PermissionPermission` FOREIGN KEY (`PermissionId_Id`) REFERENCES `Permissions` (`Id`)
+)
+CREATE TABLE `Change_LogSet` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    PRIMARY KEY (`Id`)
+) 
+CREATE TABLE `Workers` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `First_Name` TEXT NOT NULL,
+    `Last_Name` TEXT NOT NULL,
+    `Identity_Document` TEXT NOT NULL,
+    `Job_Title` TEXT NOT NULL,
+    `Email` TEXT NOT NULL,
+    `Phone` TEXT NOT NULL,
+    `Hire_Date` TEXT NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Workers` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `First_Name` TEXT NOT NULL,
+    `Last_Name` TEXT NOT NULL,
+    `Identity_Document` TEXT NOT NULL,
+    `Job_Title` TEXT NOT NULL,
+    `Email` TEXT NOT NULL,
+    `Phone` TEXT NOT NULL,
+    `Hire_Date` TEXT NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `PQRSet` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `PQR_Type` TEXT NOT NULL,
+    `Description` TEXT NOT NULL,
+    `Creation_Date` TEXT NOT NULL,
+    `PQR_Status` TEXT NOT NULL,
+    `Resolution_Date` TEXT NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Logins` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Username` TEXT NOT NULL,
+    `Password` TEXT NOT NULL,
+    PRIMARY KEY (`Id`)
+)
+CREATE TABLE `Workers_Logins` (
+    `Id` INT NOT NULL AUTO_INCREMENT,
+    `Username` TEXT NOT NULL,
+    `Password` TEXT NOT NULL,
+    `Creation_Date` TEXT NOT NULL,
+    `Status` TEXT NOT NULL,
+    `Login_Id` INT NOT NULL,
+    `Worker_Id` INT NOT NULL,
+    PRIMARY KEY (`Id`),
+    INDEX `IX_FK_Worker_LoginLogin` (`Login_Id`),
+    INDEX `IX_FK_Worker_LoginWorker` (`Worker_Id`),
+    CONSTRAINT `FK_Worker_LoginLogin` FOREIGN KEY (`Login_Id`) REFERENCES `Logins` (`Id`),
+    CONSTRAINT `FK_Worker_LoginWorker` FOREIGN KEY (`Worker_Id`) REFERENCES `Workers` (`Id`)
+)
+CREATE TABLE `PQRWorker` (
+    `PQR_Id` INT NOT NULL,
+    `Worker_Id` INT NOT NULL,
+    PRIMARY KEY (`PQR_Id`, `Worker_Id`),
+    INDEX `IX_FK_PQRWorker_Worker` (`Worker_Id`),
+    CONSTRAINT `FK_PQRWorker_PQR` FOREIGN KEY (`PQR_Id`) REFERENCES `PQRSet` (`Id`),
+    CONSTRAINT `FK_PQRWorker_Worker` FOREIGN KEY (`Worker_Id`) REFERENCES `Workers` (`Id`)
+)
+CREATE TABLE `PQRClient` (
+    `PQR_Id` INT NOT NULL,
+    `Client_Id` INT NOT NULL,
+    PRIMARY KEY (`PQR_Id`, `Client_Id`),
+    INDEX `IX_FK_PQRClient_Client` (`Client_Id`),
+    CONSTRAINT `FK_PQRClient_PQR` FOREIGN KEY (`PQR_Id`) REFERENCES `PQRSet` (`Id`),
+    CONSTRAINT `FK_PQRClient_Client` FOREIGN KEY (`Client_Id`) REFERENCES `Clients` (`Id`)
+)
