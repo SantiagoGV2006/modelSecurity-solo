@@ -116,3 +116,18 @@ C:\Users\Santiago\source\repos\ModelSecurity\Entity\obj\Debug\net9.0\Entity.pdb
 C:\Users\Santiago\source\repos\ModelSecurity\Entity\obj\Debug\net9.0\Entity.genruntimeconfig.cache
 C:\Users\Santiago\source\repos\ModelSecurity\Entity\obj\Debug\net9.0\ref\Entity.dll
 C:\Users\Santiago\source\repos\ModelSecurity\Entity\obj\Debug\net9.0\Entity.sourcelink.json
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\bin\Debug\net9.0\Entity.deps.json
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\bin\Debug\net9.0\Entity.runtimeconfig.json
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\bin\Debug\net9.0\Entity.dll
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\bin\Debug\net9.0\Entity.pdb
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.csproj.AssemblyReference.cache
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.AssemblyInfoInputs.cache
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.AssemblyInfo.cs
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.csproj.CoreCompileInputs.cache
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.sourcelink.json
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.dll
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\refint\Entity.dll
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.pdb
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\Entity.genruntimeconfig.cache
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Entity\obj\Debug\net9.0\ref\Entity.dll

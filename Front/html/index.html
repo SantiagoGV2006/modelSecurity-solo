@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurityPQR System - Dashboard</title>
+    <title>SecuritySystem - Dashboard</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Nuevos estilos para tarjetas desplegables -->
+    <link rel="stylesheet" href="../css/collapsible-cards.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <i class="fas fa-shield-alt me-2"></i>SecurityPQR
+                <i class="fas fa-shield-alt me-2"></i>SecuritySystem
             </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="theme-toggle me-3">
                 <button class="btn btn-outline-light" id="theme-toggle-btn">
                     <i class="fas fa-moon"></i>
-                </button>
-            </div>
                 </button>
             </div>
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -33,33 +34,6 @@
                         <a class="nav-link active" href="index.html">
                             <i class="fas fa-home me-1"></i>Inicio
                         </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-users me-1"></i>Clientes
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="clientes.html">Ver Clientes</a></li>
-                            <li><a class="dropdown-item" href="clientes.html?action=new">Nuevo Cliente</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-clipboard-list me-1"></i>PQRs
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="pqrs.html">Ver PQRs</a></li>
-                            <li><a class="dropdown-item" href="pqrs.html?action=new">Nueva PQR</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-tie me-1"></i>Empleados
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="empleados.html">Ver Empleados</a></li>
-                            <li><a class="dropdown-item" href="empleados.html?action=new">Nuevo Empleado</a></li>
-                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
@@ -115,165 +89,263 @@
             <div class="row mb-4">
                 <div class="col">
                     <h1 class="display-5 mb-3"><i class="fas fa-tachometer-alt me-2"></i>Panel de Control</h1>
-                    <p class="lead">Bienvenido al sistema de gestión de PQRs.</p>
+                    <p class="lead">Bienvenido al sistema de gestión de seguridad.</p>
                 </div>
             </div>
 
-            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4 mb-5">
-                <!-- Dashboard Cards -->
+            <!-- Tarjetas de Estadísticas -->
+            <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
+                <!-- Usuarios Card -->
                 <div class="col">
-                    <div class="card h-100 border-primary">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="card-title">Clientes</h5>
-                                    <h2 class="display-6 fw-bold" id="client-count">--</h2>
-                                </div>
-                                <i class="fas fa-users fa-2x text-primary"></i>
+                    <div class="stat-card warning-card">
+                        <div class="stat-card-header">
+                            <h5 class="stat-card-title">Usuarios</h5>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-user-lock"></i>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="clientes.html" class="text-decoration-none">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
+                        <h2 class="stat-card-value" id="user-count">--</h2>
+                        <div class="stat-card-footer">
+                            <a href="usuarios.html">Ver todos <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Roles Card -->
                 <div class="col">
-                    <div class="card h-100 border-success">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="card-title">PQRs Activos</h5>
-                                    <h2 class="display-6 fw-bold" id="pqr-count">--</h2>
-                                </div>
-                                <i class="fas fa-clipboard-list fa-2x text-success"></i>
+                    <div class="stat-card primary-card">
+                        <div class="stat-card-header">
+                            <h5 class="stat-card-title">Roles</h5>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-user-tag"></i>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="pqrs.html" class="text-decoration-none">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
+                        <h2 class="stat-card-value" id="role-count">--</h2>
+                        <div class="stat-card-footer">
+                            <a href="roles.html">Ver todos <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Módulos Card -->
                 <div class="col">
-                    <div class="card h-100 border-info">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="card-title">Empleados</h5>
-                                    <h2 class="display-6 fw-bold" id="worker-count">--</h2>
-                                </div>
-                                <i class="fas fa-user-tie fa-2x text-info"></i>
+                    <div class="stat-card info-card">
+                        <div class="stat-card-header">
+                            <h5 class="stat-card-title">Módulos</h5>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-puzzle-piece"></i>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="empleados.html" class="text-decoration-none">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
+                        <h2 class="stat-card-value" id="module-count">--</h2>
+                        <div class="stat-card-footer">
+                            <a href="modulos.html">Ver todos <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
 
+                <!-- Formularios Card -->
                 <div class="col">
-                    <div class="card h-100 border-warning">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <h5 class="card-title">Usuarios</h5>
-                                    <h2 class="display-6 fw-bold" id="user-count">--</h2>
-                                </div>
-                                <i class="fas fa-user-lock fa-2x text-warning"></i>
+                    <div class="stat-card success-card">
+                        <div class="stat-card-header">
+                            <h5 class="stat-card-title">Formularios</h5>
+                            <div class="stat-card-icon">
+                                <i class="fas fa-file-alt"></i>
                             </div>
                         </div>
-                        <div class="card-footer bg-transparent">
-                            <a href="usuarios.html" class="text-decoration-none">Ver todos <i class="fas fa-arrow-right ms-1"></i></a>
+                        <h2 class="stat-card-value" id="form-count">--</h2>
+                        <div class="stat-card-footer">
+                            <a href="formularios.html">Ver todos <i class="fas fa-arrow-right"></i></a>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Latest PQRs Table -->
-            <div class="row mb-4">
-                <div class="col">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0"><i class="fas fa-clipboard-list me-2"></i>PQRs Recientes</h5>
+            <!-- Usuarios Recientes - Tarjeta Desplegable -->
+            <div class="collapsible-card expanded" id="usuarios-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-user-lock me-2"></i>Usuarios Recientes <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" onclick="window.location.href='usuarios.html?action=new'">
+                            <i class="fas fa-plus"></i> Nuevo Usuario
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="usuarios-search" placeholder="Buscar usuario...">
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Tipo</th>
-                                            <th scope="col">Cliente</th>
-                                            <th scope="col">Estado</th>
-                                            <th scope="col">Fecha</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recent-pqrs">
-                                        <tr>
-                                            <td colspan="6" class="text-center py-4">Cargando datos...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="usuarios-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Roles</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-users">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Roles Recientes - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="roles-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-user-tag me-2"></i>Roles <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" onclick="window.location.href='roles.html?action=new'">
+                            <i class="fas fa-plus"></i> Nuevo Rol
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="roles-search" placeholder="Buscar rol...">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="roles-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Descripción</th>
+                                        <th>Fecha de Creación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-roles">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Latest Clients and Workers Rows -->
-            <div class="row">
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Clientes Recientes</h5>
+            <!-- Formularios - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="formularios-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-file-alt me-2"></i>Formularios <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" onclick="window.location.href='formularios.html?action=new'">
+                            <i class="fas fa-plus"></i> Nuevo Formulario
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="formularios-search" placeholder="Buscar formulario...">
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Documento</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recent-clients">
-                                        <tr>
-                                            <td colspan="4" class="text-center py-4">Cargando datos...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="formularios-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Código</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-forms">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-                
-                <div class="col-md-6 mb-4">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <h5 class="mb-0"><i class="fas fa-user-tie me-2"></i>Empleados Recientes</h5>
+            </div>
+            
+            <!-- Módulos - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="modulos-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-puzzle-piece me-2"></i>Módulos <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" onclick="window.location.href='modulos.html?action=new'">
+                            <i class="fas fa-plus"></i> Nuevo Módulo
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="modulos-search" placeholder="Buscar módulo...">
                         </div>
-                        <div class="card-body">
-                            <div class="table-responsive">
-                                <table class="table table-hover">
-                                    <thead>
-                                        <tr>
-                                            <th scope="col">ID</th>
-                                            <th scope="col">Nombre</th>
-                                            <th scope="col">Cargo</th>
-                                            <th scope="col">Acciones</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="recent-workers">
-                                        <tr>
-                                            <td colspan="4" class="text-center py-4">Cargando datos...</td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="modulos-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Código</th>
+                                        <th>Estado</th>
+                                        <th>Fecha de Creación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-modules">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Permisos - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="permisos-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-lock me-2"></i>Permisos <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" onclick="window.location.href='permisos.html?action=new'">
+                            <i class="fas fa-plus"></i> Nuevo Permiso
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="permisos-search" placeholder="Buscar permiso...">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="permisos-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Lectura</th>
+                                        <th>Creación</th>
+                                        <th>Actualización</th>
+                                        <th>Eliminación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recent-permissions">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
@@ -300,6 +372,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Common utilities -->
     <script src="../js/utils.js"></script>
+    <!-- Collapsible Cards JS -->
+    <script src="../js/cards.js"></script>
     <!-- Dashboard specific JS -->
     <script src="../js/dashboard.js"></script>
 </body>

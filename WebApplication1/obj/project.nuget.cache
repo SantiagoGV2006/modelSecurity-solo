@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "m8dDgakPQ8Q=",
+  "dgSpecHash": "oIxBJW8vZO0=",
   "success": true,
-  "projectFilePath": "C:\\Users\\Santiago\\source\\repos\\ModelSecurity\\WebApplication1\\WebApplication1.csproj",
+  "projectFilePath": "C:\\Users\\Santiago\\source\\repos\\ModelSecurity sin PQR\\WebApplication1\\WebApplication1.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Santiago\\.nuget\\packages\\azure.core\\1.38.0\\azure.core.1.38.0.nupkg.sha512",
     "C:\\Users\\Santiago\\.nuget\\packages\\azure.identity\\1.11.4\\azure.identity.1.11.4.nupkg.sha512",

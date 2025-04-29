@@ -10,6 +10,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Nuevos estilos para tarjetas desplegables -->
+    <link rel="stylesheet" href="../css/collapsible-cards.css">
 </head>
 <body>
     <!-- Navigation -->
@@ -113,34 +115,81 @@
         <div id="forms-page">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-5"><i class="fas fa-file-alt me-2"></i>Gestión de Formularios</h1>
-                <button class="btn btn-primary" id="form-add-btn">
-                    <i class="fas fa-plus me-1"></i>Nuevo Formulario
-                </button>
             </div>
             
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <h5 class="mb-0">Listado de Formularios</h5>
+            <!-- Lista de Formularios - Tarjeta Desplegable -->
+            <div class="collapsible-card expanded" id="forms-list-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-list me-2"></i>Listado de Formularios <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" id="form-add-btn">
+                            <i class="fas fa-plus"></i> Nuevo Formulario
+                        </button>
+                    </div>
                 </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Código</th>
-                                    <th scope="col">Estado</th>
-                                    <th scope="col">Fecha de Creación</th>
-                                    <th scope="col">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="forms-table">
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">Cargando datos...</td>
-                                </tr>
-                            </tbody>
-                        </table>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="formularios-search" placeholder="Buscar formulario...">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="formularios-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Código</th>
+                                        <th>Estado</th>
+                                        <th>Fecha de Creación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="forms-table-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Asociación de Módulos - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="form-modules-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-link me-2"></i>Asociación de Módulos <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" id="form-module-add-btn">
+                            <i class="fas fa-plus"></i> Nueva Asociación
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="form-modules-search" placeholder="Buscar asociación...">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="form-modules-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Formulario</th>
+                                        <th>Módulo</th>
+                                        <th>Fecha de Creación</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="form-modules-table-body">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -150,9 +199,9 @@
         <div class="modal fade" id="formModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header">
+                    <div class="modal-header bg-primary text-white">
                         <h5 class="modal-title" id="formModalTitle">Agregar Formulario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <form id="formForm">
@@ -174,6 +223,39 @@
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                         <button type="button" class="btn btn-primary" id="saveFormBtn">Guardar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Form Module Modal -->
+        <div class="modal fade" id="formModuleModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header bg-primary text-white">
+                        <h5 class="modal-title">Asociar Módulo</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="formModuleForm">
+                            <input type="hidden" id="form-module-id">
+                            <div class="mb-3">
+                                <label for="form-module-formId" class="form-label">Formulario</label>
+                                <select class="form-select" id="form-module-formId" required>
+                                    <option value="">Seleccione un formulario</option>
+                                </select>
+                            </div>
+                            <div class="mb-3">
+                                <label for="form-module-moduleId" class="form-label">Módulo</label>
+                                <select class="form-select" id="form-module-moduleId" required>
+                                    <option value="">Seleccione un módulo</option>
+                                </select>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-primary" id="saveFormModuleBtn">Guardar</button>
                     </div>
                 </div>
             </div>
@@ -224,7 +306,9 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <!-- Common utilities -->
     <script src="../js/utils.js"></script>
-    <!-- Forms specific JS -->
-    <script src="js/formularios.js"></script>
+    <!-- Collapsible Cards JS -->
+    <script src="../js/cards.js"></script>
+    <!-- Formularios specific JS -->
+    <script src="../js/formularios.js"></script>
 </body>
 </html>

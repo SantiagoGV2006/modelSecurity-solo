@@ -3,20 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecurityPQR System - Usuarios</title>
+    <title>SecuritySystem - Usuarios</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../css/styles.css">
+    <!-- Nuevos estilos para tarjetas desplegables -->
+    <link rel="stylesheet" href="../css/collapsible-cards.css">
 </head>
 <body>
     <!-- Navigation -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <div class="container">
             <a class="navbar-brand" href="index.html">
-                <i class="fas fa-shield-alt me-2"></i>SecurityPQR
+                <i class="fas fa-shield-alt me-2"></i>SecuritySystem
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -32,33 +34,6 @@
                         <a class="nav-link" href="index.html">
                             <i class="fas fa-home me-1"></i>Inicio
                         </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-users me-1"></i>Clientes
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="clientes.html">Ver Clientes</a></li>
-                            <li><a class="dropdown-item" href="clientes.html?action=new">Nuevo Cliente</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-clipboard-list me-1"></i>PQRs
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="pqrs.html">Ver PQRs</a></li>
-                            <li><a class="dropdown-item" href="pqrs.html?action=new">Nueva PQR</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-tie me-1"></i>Empleados
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="empleados.html">Ver Empleados</a></li>
-                            <li><a class="dropdown-item" href="empleados.html?action=new">Nuevo Empleado</a></li>
-                        </ul>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown">
@@ -113,173 +88,79 @@
         <div id="users-page">
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h1 class="display-5"><i class="fas fa-user-lock me-2"></i>Gestión de Usuarios</h1>
-                <button class="btn btn-primary" id="user-add-btn">
-                    <i class="fas fa-plus me-1"></i>Nuevo Usuario
-                </button>
             </div>
             
-            <div class="card mb-4">
-                <div class="card-header bg-light">
-                    <div class="row">
-                        <div class="col-md-6">
-                            <h5 class="mb-0">Listado de Usuarios</h5>
+            <!-- Listado de Usuarios - Tarjeta Desplegable -->
+            <div class="collapsible-card expanded" id="users-list-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-list me-2"></i>Listado de Usuarios <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" id="user-add-btn">
+                            <i class="fas fa-plus"></i> Nuevo Usuario
+                        </button>
+                    </div>
+                </div>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="user-search" placeholder="Buscar usuario...">
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" class="form-control" id="user-search" placeholder="Buscar usuario...">
+                        <div class="table-responsive">
+                            <table class="card-table" id="users-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nombre</th>
+                                        <th>Email</th>
+                                        <th>Fecha de Creación</th>
+                                        <th>Roles</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">Cargando datos...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </div>
-                </div>
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th scope="col">ID</th>
-                                    <th scope="col">Nombre</th>
-                                    <th scope="col">Email</th>
-                                    <th scope="col">Fecha de Creación</th>
-                                    <th scope="col">Roles</th>
-                                    <th scope="col">Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody id="users-table">
-                                <tr>
-                                    <td colspan="6" class="text-center py-4">Cargando datos...</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div id="users-pagination" class="d-flex justify-content-center mt-4">
-                        <!-- Pagination will be generated by JS -->
+                        <div id="users-pagination" class="custom-pagination mt-4"></div>
                     </div>
                 </div>
             </div>
-        </div>
-
-        <!-- User Form Modal -->
-        <div class="modal fade" id="userModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="userModalTitle">Agregar Usuario</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="userForm">
-                            <input type="hidden" id="user-id">
-                            <div class="mb-3">
-                                <label for="user-name" class="form-label">Nombre</label>
-                                <input type="text" class="form-control" id="user-name" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="user-email" class="form-label">Email</label>
-                                <input type="email" class="form-control" id="user-email" required>
-                            </div>
-                            <div class="mb-3">
-                                <label for="user-password" class="form-label">Contraseña</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="user-password" required>
-                                    <button class="btn btn-outline-secondary" type="button" id="toggleUserPasswordBtn">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="user-workerId" class="form-label">Empleado Asociado (Opcional)</label>
-                                <select class="form-select" id="user-workerId">
-                                    <option value="">Ninguno</option>
-                                    <!-- Options will be loaded via JavaScript -->
-                                </select>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="saveUserBtn">Guardar</button>
+            
+            <!-- Roles de Usuario - Tarjeta Desplegable -->
+            <div class="collapsible-card mt-4" id="user-roles-card">
+                <div class="collapsible-card-header">
+                    <h4><i class="fas fa-user-tag me-2"></i>Roles de Usuario <i class="fas fa-chevron-down ms-2"></i></h4>
+                    <div class="card-actions">
+                        <button class="action-button add-button" id="user-role-add-btn">
+                            <i class="fas fa-plus"></i> Asignar Rol
+                        </button>
                     </div>
                 </div>
-            </div>
-        </div>
-
-        <!-- User Roles Modal -->
-        <div class="modal fade" id="userRolesModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Asignar Roles</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="userRolesForm">
-                            <input type="hidden" id="userRoles-userId">
-                            <div class="mb-3">
-                                <label class="form-label">Roles Disponibles</label>
-                                <div id="roles-checkbox-container" class="border rounded p-3">
-                                    <!-- Roles checkboxes will be loaded via JavaScript -->
-                                    <div class="d-flex align-items-center justify-content-center py-3">
-                                        <div class="spinner-border spinner-border-sm text-primary me-2" role="status">
-                                            <span class="visually-hidden">Cargando...</span>
-                                        </div>
-                                        <span>Cargando roles...</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-primary" id="saveUserRolesBtn">Guardar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Delete Confirmation Modal -->
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header bg-danger text-white">
-                        <h5 class="modal-title">Confirmar Eliminación</h5>
-                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <p id="delete-message">¿Está seguro que desea eliminar este elemento?</p>
-                        <div class="form-check mt-3">
-                            <input class="form-check-input" type="checkbox" id="permanent-delete">
-                            <label class="form-check-label" for="permanent-delete">
-                                Eliminar permanentemente (esta acción no se puede deshacer)
-                            </label>
+                <div class="collapsible-card-body">
+                    <div class="collapsible-card-content">
+                        <div class="custom-search-container">
+                            <i class="fas fa-search custom-search-icon"></i>
+                            <input type="text" class="custom-search-input" id="user-roles-search" placeholder="Buscar asignación...">
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Eliminar</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
+                        <div class="table-responsive">
+                            <table class="card-table" id="user-roles"></table>
 
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 d-none justify-content-center align-items-center" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
-        <div class="card p-4 shadow">
-            <div class="text-center">
-                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-                <h5 class="mb-0">Procesando solicitud...</h5>
-            </div>
-        </div>
-    </div>
 
-    <!-- JavaScript Files -->
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Common utilities -->
-    <script src="../js/utils.js"></script>
-    <!-- Usuarios specific JS -->
-    <script src="../js/usuarios.js"></script>
-</body>
-</html>
+
+                            <!-- JavaScript Files -->
+                            <!-- jQuery -->
+                            <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+                            <!-- Bootstrap Bundle with Popper -->
+                            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+                            <!-- Common utilities -->
+                            <script src="../js/utils.js"></script>
+                            <!-- Collapsible Cards JS -->
+                            <script src="../js/cards.js"></script>
+                            <!-- Dashboard specific JS -->
+                            <script src="../js/usuarios.js"></script>
+                        </body>
+                        </html>
