@@ -1,86 +1,107 @@
-/**
- * SecurityPQR System - Login Page JavaScript
- */
-
-// Handle login form submission
-async function handleLogin(event) {
-    event.preventDefault();
-    
-    const username = document.getElementById('login-username').value;
-    const password = document.getElementById('login-password').value;
-    const rememberMe = document.getElementById('remember-me').checked;
-    
-    if (!username || !password) {
-        showToast('Error', 'Por favor ingrese usuario y contraseña', 'error');
+document.addEventListener('DOMContentLoaded', function() {
+    // Si ya está autenticado, redirigir al dashboard
+    if (isAuthenticated()) {
+        window.location.href = 'dashboard.html';
         return;
     }
     
-    try {
-        showLoading();
+    // Obtener el formulario de login
+    const loginForm = document.getElementById('loginForm');
+    
+    // Agregar evento de envío al formulario
+    loginForm.addEventListener('submit', handleLoginSubmit);
+    
+    /**
+     * Maneja el envío del formulario de login
+     */
+    async function handleLoginSubmit(event) {
+        event.preventDefault();
         
-        // En una aplicación real, aquí se haría una llamada a la API de autenticación
-        // Para esta demostración, simulamos una autenticación exitosa
+        // Obtener los valores del formulario
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
         
-        // Simulate API call with a delay
-        setTimeout(() => {
-            // Store auth token and user info in local storage
-            const token = 'mock_jwt_token';
-            const userInfo = {
-                id: 1,
-                username: username,
-                name: 'Administrador',
-                role: 'Admin'
-            };
+        // Validar campos
+        if (!username || !password) {
+            showMessage('loginMessage', 'Por favor, complete todos los campos.', 'error');
+            return;
+        }
+        
+        try {
+            showMessage('loginMessage', 'Iniciando sesión...', 'info');
             
-            localStorage.setItem(STORAGE_KEYS.AUTH_TOKEN, token);
-            localStorage.setItem(STORAGE_KEYS.USER_INFO, JSON.stringify(userInfo));
+            // Obtener usuarios para buscar usuario por nombre de usuario
+            const users = await apiRequest(API_CONFIG.ENDPOINTS.USER);
             
-            if (rememberMe) {
-                localStorage.setItem(STORAGE_KEYS.REMEMBER_ME, 'true');
-            } else {
-                localStorage.removeItem(STORAGE_KEYS.REMEMBER_ME);
+            if (!users || users.length === 0) {
+                throw new Error('No se encontraron usuarios registrados.');
             }
             
-            // Redirect to home page
-            window.location.href = 'index.html';
+            // Buscar el usuario por nombre o email
+            const user = users.find(u => 
+                (u.name && u.name.toLowerCase() === username.toLowerCase()) || 
+                (u.email && u.email.toLowerCase() === username.toLowerCase())
+            );
             
-            hideLoading();
-        }, 1000);
-    } catch (error) {
-        hideLoading();
-        console.error('Login error:', error);
-        showToast('Error de Autenticación', 'Usuario o contraseña incorrectos', 'error');
+            if (!user) {
+                throw new Error('Usuario no encontrado. Verifique su nombre de usuario o correo electrónico.');
+            }
+            
+            // Verificar contraseña (esto normalmente lo haría el backend de forma segura)
+            if (user.password !== password) {
+                throw new Error('Contraseña incorrecta.');
+            }
+            
+            // Buscar el rol del usuario
+            let rolId = API_CONFIG.ROLES.USER; // Rol por defecto
+            let rolName = 'Usuario';
+            
+            try {
+                // Obtener roles del usuario
+                const rolUsers = await apiRequest(API_CONFIG.ENDPOINTS.ROL_USER);
+                const userRol = rolUsers.find(ru => ru.userId === user.id);
+                
+                if (userRol) {
+                    rolId = userRol.rolId;
+                    
+                    // Obtener detalles del rol
+                    const roles = await apiRequest(API_CONFIG.ENDPOINTS.ROL);
+                    const rol = roles.find(r => r.id === rolId);
+                    
+                    if (rol) {
+                        rolName = rol.name;
+                    }
+                }
+            } catch (roleError) {
+                console.error('Error al obtener el rol del usuario:', roleError);
+                // No fallamos el login por un error en la obtención del rol
+            }
+            
+            // Crear objeto de usuario con la información necesaria
+            const userObj = {
+                id: user.id,
+                username: username,
+                name: user.name || username,
+                email: user.email || '',
+                rolId: rolId,
+                rolName: rolName,
+                token: 'fake-token-' + Math.random().toString(36).substring(2)
+            };
+            
+            // Guardar datos de usuario
+            saveToStorage('user', userObj);
+            
+            // Mostrar mensaje de éxito
+            showMessage('loginMessage', '¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+            
+            // Redirigir al dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 1000);
+            
+        } catch (error) {
+            showMessage('loginMessage', error.message || 'Error al iniciar sesión. Inténtelo de nuevo.', 'error');
+            console.error('Error al iniciar sesión:', error);
+        }
     }
-}
-
-// Handle forgot password link
-function handleForgotPassword(event) {
-    event.preventDefault();
-    showToast('Info', 'La funcionalidad de recuperación de contraseña no está disponible en esta demostración', 'info');
-}
-
-// Initialize login page
-function initLoginPage() {
-    // Set up event listeners
-    const loginForm = document.getElementById('loginForm');
-    const forgotPasswordLink = document.getElementById('forgot-password-link');
-    
-    if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
-    }
-    
-    if (forgotPasswordLink) {
-        forgotPasswordLink.addEventListener('click', handleForgotPassword);
-    }
-    
-    // Set up password toggle
-    setupPasswordToggle('login-password', 'toggleLoginPasswordBtn');
-    
-    // Check if user is already logged in
-    if (isLoggedIn()) {
-        window.location.href = 'index.html';
-    }
-}
-
-// Initialize when document is ready
-onDocumentReady(initLoginPage);
+});

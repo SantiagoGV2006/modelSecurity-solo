@@ -24,7 +24,7 @@ builder.Services.AddCors(opciones =>
     {
         politica.WithOrigins(OrigenesPermitidos).AllowAnyHeader().AllowAnyMethod();
     });
-});
+}); 
 
 //  Agregar el contexto de la base de datos
 builder.Services.AddDbContext<ApplicationDbContext>(options =>

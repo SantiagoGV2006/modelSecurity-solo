@@ -3,378 +3,146 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SecuritySystem - Dashboard</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <!-- Custom CSS -->
+    <title>Sistema de Seguridad - Panel de Control</title>
     <link rel="stylesheet" href="../css/styles.css">
-    <!-- Nuevos estilos para tarjetas desplegables -->
-    <link rel="stylesheet" href="../css/collapsible-cards.css">
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container">
-            <a class="navbar-brand" href="index.html">
-                <i class="fas fa-shield-alt me-2"></i>SecuritySystem
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="theme-toggle me-3">
-                <button class="btn btn-outline-light" id="theme-toggle-btn">
-                    <i class="fas fa-moon"></i>
-                </button>
+    <div class="dashboard-container">
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <h3>Sistema de Seguridad</h3>
             </div>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav me-auto">
-                    <li class="nav-item">
-                        <a class="nav-link active" href="index.html">
-                            <i class="fas fa-home me-1"></i>Inicio
-                        </a>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-user-lock me-1"></i>Usuarios
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="usuarios.html">Ver Usuarios</a></li>
-                            <li><a class="dropdown-item" href="usuarios.html?action=new">Nuevo Usuario</a></li>
-                        </ul>
-                    </li>
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                            <i class="fas fa-cogs me-1"></i>Administración
-                        </a>
-                        <ul class="dropdown-menu">
-                            <li><a class="dropdown-item" href="roles.html">Roles</a></li>
-                            <li><a class="dropdown-item" href="modulos.html">Módulos</a></li>
-                            <li><a class="dropdown-item" href="formularios.html">Formularios</a></li>
-                            <li><a class="dropdown-item" href="permisos.html">Permisos</a></li>
-                        </ul>
-                    </li>
-                </ul>
-                <div class="d-flex">
-                    <span class="navbar-text me-3" id="user-info">
-                        <i class="fas fa-user-circle me-1"></i>Usuario: Admin
-                    </span>
-                    <button class="btn btn-outline-light" id="logout-btn">
-                        <i class="fas fa-sign-out-alt me-1"></i>Salir
-                    </button>
-                </div>
+            <div class="user-info">
+                <span id="userDisplayName">Usuario</span>
+                <span id="userRole">Rol</span>
             </div>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <div class="container mt-4">
-        <!-- Toast notifications -->
-        <div class="toast-container position-fixed top-0 end-0 p-3">
-            <div id="toast-notification" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
-                <div class="toast-header">
-                    <i class="fas fa-bell me-2"></i>
-                    <strong class="me-auto" id="toast-title">Notificación</strong>
-                    <button type="button" class="btn-close" data-bs-dismiss="toast" aria-label="Close"></button>
+            <ul class="menu">
+                <li><a href="#" data-section="dashboard" class="active">Inicio</a></li>
+                <li><a href="#" data-section="profile">Mi Perfil</a></li>
+                <li class="admin-only"><a href="#" data-section="users">Usuarios</a></li>
+                <li class="admin-only"><a href="#" data-section="roles">Roles</a></li>
+                <li><a href="#" id="logoutBtn">Cerrar Sesión</a></li>
+            </ul>
+        </nav>
+        
+        <main class="content">
+            <header class="content-header">
+                <h2 id="sectionTitle">Panel de Control</h2>
+            </header>
+            
+            <!-- Sección de Inicio -->
+            <div class="section-content" id="dashboardSection">
+                <div class="welcome-message">
+                    <h3>Bienvenido/a al Sistema de Gestión de Seguridad</h3>
+                    <p>Este es tu panel de control. Aquí podrás administrar tu cuenta y acceder a las diferentes funcionalidades del sistema según tu rol.</p>
                 </div>
-                <div class="toast-body" id="toast-message">
-                    Mensaje de notificación
-                </div>
-            </div>
-        </div>
-
-        <!-- Home Page (Dashboard) -->
-        <div id="home-page">
-            <div class="row mb-4">
-                <div class="col">
-                    <h1 class="display-5 mb-3"><i class="fas fa-tachometer-alt me-2"></i>Panel de Control</h1>
-                    <p class="lead">Bienvenido al sistema de gestión de seguridad.</p>
-                </div>
-            </div>
-
-            <!-- Tarjetas de Estadísticas -->
-            <div class="row row-cols-1 row-cols-md-4 g-4 mb-5">
-                <!-- Usuarios Card -->
-                <div class="col">
-                    <div class="stat-card warning-card">
-                        <div class="stat-card-header">
-                            <h5 class="stat-card-title">Usuarios</h5>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-user-lock"></i>
-                            </div>
-                        </div>
-                        <h2 class="stat-card-value" id="user-count">--</h2>
-                        <div class="stat-card-footer">
-                            <a href="usuarios.html">Ver todos <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Roles Card -->
-                <div class="col">
-                    <div class="stat-card primary-card">
-                        <div class="stat-card-header">
-                            <h5 class="stat-card-title">Roles</h5>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-user-tag"></i>
-                            </div>
-                        </div>
-                        <h2 class="stat-card-value" id="role-count">--</h2>
-                        <div class="stat-card-footer">
-                            <a href="roles.html">Ver todos <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Módulos Card -->
-                <div class="col">
-                    <div class="stat-card info-card">
-                        <div class="stat-card-header">
-                            <h5 class="stat-card-title">Módulos</h5>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-puzzle-piece"></i>
-                            </div>
-                        </div>
-                        <h2 class="stat-card-value" id="module-count">--</h2>
-                        <div class="stat-card-footer">
-                            <a href="modulos.html">Ver todos <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Formularios Card -->
-                <div class="col">
-                    <div class="stat-card success-card">
-                        <div class="stat-card-header">
-                            <h5 class="stat-card-title">Formularios</h5>
-                            <div class="stat-card-icon">
-                                <i class="fas fa-file-alt"></i>
-                            </div>
-                        </div>
-                        <h2 class="stat-card-value" id="form-count">--</h2>
-                        <div class="stat-card-footer">
-                            <a href="formularios.html">Ver todos <i class="fas fa-arrow-right"></i></a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Usuarios Recientes - Tarjeta Desplegable -->
-            <div class="collapsible-card expanded" id="usuarios-card">
-                <div class="collapsible-card-header">
-                    <h4><i class="fas fa-user-lock me-2"></i>Usuarios Recientes <i class="fas fa-chevron-down ms-2"></i></h4>
-                    <div class="card-actions">
-                        <button class="action-button add-button" onclick="window.location.href='usuarios.html?action=new'">
-                            <i class="fas fa-plus"></i> Nuevo Usuario
-                        </button>
-                    </div>
-                </div>
-                <div class="collapsible-card-body">
-                    <div class="collapsible-card-content">
-                        <div class="custom-search-container">
-                            <i class="fas fa-search custom-search-icon"></i>
-                            <input type="text" class="custom-search-input" id="usuarios-search" placeholder="Buscar usuario...">
-                        </div>
-                        <div class="table-responsive">
-                            <table class="card-table" id="usuarios-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Email</th>
-                                        <th>Roles</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-users">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Roles Recientes - Tarjeta Desplegable -->
-            <div class="collapsible-card mt-4" id="roles-card">
-                <div class="collapsible-card-header">
-                    <h4><i class="fas fa-user-tag me-2"></i>Roles <i class="fas fa-chevron-down ms-2"></i></h4>
-                    <div class="card-actions">
-                        <button class="action-button add-button" onclick="window.location.href='roles.html?action=new'">
-                            <i class="fas fa-plus"></i> Nuevo Rol
-                        </button>
-                    </div>
-                </div>
-                <div class="collapsible-card-body">
-                    <div class="collapsible-card-content">
-                        <div class="custom-search-container">
-                            <i class="fas fa-search custom-search-icon"></i>
-                            <input type="text" class="custom-search-input" id="roles-search" placeholder="Buscar rol...">
-                        </div>
-                        <div class="table-responsive">
-                            <table class="card-table" id="roles-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha de Creación</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-roles">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                
+                <div class="role-info">
+                    <h3>Información de Rol</h3>
+                    <p>Tu rol actual es: <span id="currentRole">Usuario</span></p>
+                    <div id="rolePermissions"></div>
                 </div>
             </div>
             
-            <!-- Formularios - Tarjeta Desplegable -->
-            <div class="collapsible-card mt-4" id="formularios-card">
-                <div class="collapsible-card-header">
-                    <h4><i class="fas fa-file-alt me-2"></i>Formularios <i class="fas fa-chevron-down ms-2"></i></h4>
-                    <div class="card-actions">
-                        <button class="action-button add-button" onclick="window.location.href='formularios.html?action=new'">
-                            <i class="fas fa-plus"></i> Nuevo Formulario
-                        </button>
-                    </div>
-                </div>
-                <div class="collapsible-card-body">
-                    <div class="collapsible-card-content">
-                        <div class="custom-search-container">
-                            <i class="fas fa-search custom-search-icon"></i>
-                            <input type="text" class="custom-search-input" id="formularios-search" placeholder="Buscar formulario...">
+            <!-- Sección de Perfil -->
+            <div class="section-content hidden" id="profileSection">
+                <div class="card">
+                    <h3>Mi Perfil</h3>
+                    
+                    <form id="profileForm">
+                        <div class="form-group">
+                            <label for="profileName">Nombre Completo:</label>
+                            <input type="text" id="profileName" name="name" required>
                         </div>
-                        <div class="table-responsive">
-                            <table class="card-table" id="formularios-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Nombre</th>
-                                        <th>Código</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-forms">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        
+                        <div class="form-group">
+                            <label for="profileEmail">Correo Electrónico:</label>
+                            <input type="email" id="profileEmail" name="email" required>
                         </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- Módulos - Tarjeta Desplegable -->
-            <div class="collapsible-card mt-4" id="modulos-card">
-                <div class="collapsible-card-header">
-                    <h4><i class="fas fa-puzzle-piece me-2"></i>Módulos <i class="fas fa-chevron-down ms-2"></i></h4>
-                    <div class="card-actions">
-                        <button class="action-button add-button" onclick="window.location.href='modulos.html?action=new'">
-                            <i class="fas fa-plus"></i> Nuevo Módulo
-                        </button>
-                    </div>
-                </div>
-                <div class="collapsible-card-body">
-                    <div class="collapsible-card-content">
-                        <div class="custom-search-container">
-                            <i class="fas fa-search custom-search-icon"></i>
-                            <input type="text" class="custom-search-input" id="modulos-search" placeholder="Buscar módulo...">
+                        
+                        <div class="form-group">
+                            <label for="profileUsername">Nombre de Usuario:</label>
+                            <input type="text" id="profileUsername" name="username" readonly>
+                            <small>El nombre de usuario no puede ser modificado.</small>
                         </div>
-                        <div class="table-responsive">
-                            <table class="card-table" id="modulos-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Código</th>
-                                        <th>Estado</th>
-                                        <th>Fecha de Creación</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-modules">
-                                    <tr>
-                                        <td colspan="5" class="text-center py-4">Cargando datos...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                        
+                        <div class="form-group">
+                            <h4>Cambiar Contraseña</h4>
+                            <label for="currentPassword">Contraseña Actual:</label>
+                            <input type="password" id="currentPassword" name="currentPassword">
                         </div>
-                    </div>
+                        
+                        <div class="form-group">
+                            <label for="newPassword">Nueva Contraseña:</label>
+                            <input type="password" id="newPassword" name="newPassword">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="confirmNewPassword">Confirmar Nueva Contraseña:</label>
+                            <input type="password" id="confirmNewPassword" name="confirmNewPassword">
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="button primary">Guardar Cambios</button>
+                        </div>
+                        
+                        <div id="profileMessage" class="message"></div>
+                    </form>
                 </div>
             </div>
             
-            <!-- Permisos - Tarjeta Desplegable -->
-            <div class="collapsible-card mt-4" id="permisos-card">
-                <div class="collapsible-card-header">
-                    <h4><i class="fas fa-lock me-2"></i>Permisos <i class="fas fa-chevron-down ms-2"></i></h4>
-                    <div class="card-actions">
-                        <button class="action-button add-button" onclick="window.location.href='permisos.html?action=new'">
-                            <i class="fas fa-plus"></i> Nuevo Permiso
-                        </button>
+            <!-- Sección de Usuarios (Solo Admin) -->
+            <div class="section-content hidden" id="usersSection">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Lista de Usuarios</h3>
+                        <button id="addUserBtn" class="button primary">Agregar Usuario</button>
                     </div>
-                </div>
-                <div class="collapsible-card-body">
-                    <div class="collapsible-card-content">
-                        <div class="custom-search-container">
-                            <i class="fas fa-search custom-search-icon"></i>
-                            <input type="text" class="custom-search-input" id="permisos-search" placeholder="Buscar permiso...">
-                        </div>
-                        <div class="table-responsive">
-                            <table class="card-table" id="permisos-table">
-                                <thead>
-                                    <tr>
-                                        <th>ID</th>
-                                        <th>Lectura</th>
-                                        <th>Creación</th>
-                                        <th>Actualización</th>
-                                        <th>Eliminación</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="recent-permissions">
-                                    <tr>
-                                        <td colspan="6" class="text-center py-4">Cargando datos...</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Email</th>
+                                <th>Rol</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Se cargará dinámicamente -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
-        </div>
+            
+            <!-- Sección de Roles (Solo Admin) -->
+            <div class="section-content hidden" id="rolesSection">
+                <div class="table-container">
+                    <div class="table-header">
+                        <h3>Lista de Roles</h3>
+                        <button id="addRoleBtn" class="button primary">Agregar Rol</button>
+                    </div>
+                    
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Descripción</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rolesTableBody">
+                            <!-- Se cargará dinámicamente -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
     </div>
-
-    <!-- Loading Overlay -->
-    <div id="loading-overlay" class="position-fixed top-0 start-0 w-100 h-100 d-none justify-content-center align-items-center" style="background-color: rgba(0,0,0,0.5); z-index: 9999;">
-        <div class="card p-4 shadow">
-            <div class="text-center">
-                <div class="spinner-border text-primary mb-3" style="width: 3rem; height: 3rem;" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                </div>
-                <h5 class="mb-0">Procesando solicitud...</h5>
-            </div>
-        </div>
-    </div>
-
-    <!-- JavaScript Files -->
-    <!-- jQuery -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-    <!-- Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Common utilities -->
+    
     <script src="../js/utils.js"></script>
-    <!-- Collapsible Cards JS -->
-    <script src="../js/cards.js"></script>
-    <!-- Dashboard specific JS -->
     <script src="../js/dashboard.js"></script>
 </body>
 </html>
