@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Entity.Contexts;
+using Entity;
 using Entity.Model;
 
 namespace Data
@@ -98,7 +99,7 @@ namespace Data
         return await _context.Set<User>()
             .FirstOrDefaultAsync(u => u.Id == id && u.DeleteAt == default);
     }
-    catch (Exception exception)
+    catch (Exception ex)
     {
         _logger.LogError("Error al obtener usuario con ID {UserId}", id);
         throw;

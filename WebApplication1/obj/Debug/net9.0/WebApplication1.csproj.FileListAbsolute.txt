@@ -928,3 +928,5 @@ C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\obj\Debug\n
 C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\obj\Debug\net9.0\WebApplication1.pdb
 C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\obj\Debug\net9.0\WebApplication1.genruntimeconfig.cache
 C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\obj\Debug\net9.0\ref\WebApplication1.dll
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\bin\Debug\net9.0\Microsoft.AspNetCore.Server.Kestrel.Https.dll
+C:\Users\Santiago\source\repos\ModelSecurity sin PQR\WebApplication1\bin\Debug\net9.0\Microsoft.AspNetCore.Server.Kestrel.Transport.Abstractions.dll

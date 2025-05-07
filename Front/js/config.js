@@ -7,23 +7,42 @@ const API_CONFIG = {
     
     // Endpoints
     ENDPOINTS: {
+        // Endpoints de usuarios
         USER: '/User',
         
+        // Endpoints de login
         LOGIN: '/Login',
-
+        WORKER_LOGIN: '/WorkerLogin',
+        
+        // Endpoints de roles
         ROL: '/Rol',
         
+        // Endpoints de permisos
         PERMISSION: '/Permission',
         
+        // Endpoints de rol-usuario
         ROL_USER: '/RolUser',
         
+        // Endpoints de rol-formulario-permiso
         ROL_FORM_PERMISSION: '/RolFormPermission',
         
+        // Endpoints de módulos
         MODULE: '/Module',
         
+        // Endpoints de formularios
         FORM: '/Form',
         
+        // Endpoints de módulo-formulario
         FORM_MODULE: '/FormModule',
+        
+        // Endpoints de trabajadores
+        WORKER: '/Worker',
+        
+        // Endpoints de clientes
+        CLIENT: '/Client',
+        
+        // Endpoints de PQR
+        PQR: '/Pqr'
     },
     
     // IDs de roles (se actualizarán dinámicamente con los valores reales de la BD)
@@ -285,3 +304,4 @@ function formatDate(dateString) {
     const date = new Date(dateString);
     return date.toLocaleDateString();
 }
+

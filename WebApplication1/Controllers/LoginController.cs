@@ -245,35 +245,5 @@ public async Task<IActionResult> PartialUpdateLogin(int id, [FromBody] JsonPatch
                 return StatusCode(500, new { message = ex.Message });
             }
         }
-
-        // DELETE PERMANENTE api/Login/permanent/{id}
-[HttpDelete("permanent/{id}")]
-[ProducesResponseType(204)]
-[ProducesResponseType(400)]
-[ProducesResponseType(404)]
-[ProducesResponseType(500)]
-public async Task<IActionResult> PermanentDeleteLogin(int id)
-{
-    if (id <= 0)
-    {
-        return BadRequest(new { message = "El ID del login debe ser mayor que cero." });
-    }
-
-    try
-    {
-        var result = await _loginBusiness.PermanentDeleteAsync(id);
-        if (!result)
-        {
-            return NotFound(new { message = $"No se encontró el login con ID {id}." });
-        }
-
-        return NoContent();
-    }
-    catch (Exception ex)
-    {
-        _logger.LogError(ex, "Error al eliminar permanentemente el login con ID: {LoginId}", id);
-        return StatusCode(500, new { message = $"Error al eliminar permanentemente el login con ID {id}" });
-    }
-}
     }
 }

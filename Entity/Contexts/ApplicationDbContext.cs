@@ -27,14 +27,32 @@ namespace Entity.Contexts
         public DbSet<Module> Modules { get; set; }
         public DbSet<FormModule> FormModules { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<Worker> Workers { get; set; }
         public DbSet<Login> Logins { get; set; }
+        public DbSet<WorkerLogin> WorkerLogins { get; set; }
         public DbSet<Permission> Permissions { get; set; }
+        public DbSet<ActivityLog> ActivityLogs { get; set; }
         public DbSet<RolUser> RolUsers { get; set; }
+
         public DbSet<RolFormPermission> RolFormPermissions { get; set;}
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+
+            // Relación User - Worker
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Worker)
+                .WithOne(w => w.User)
+                .HasForeignKey<User>(u => u.WorkerId);
+
+            // Relación WorkerLogin - Worker
+            modelBuilder.Entity<WorkerLogin>()
+                .HasOne(wl => wl.Worker)
+                .WithMany(w => w.WorkerLogins)
+                .HasForeignKey(wl => wl.WorkerId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
 

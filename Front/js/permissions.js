@@ -685,3 +685,305 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+/**
+ * Muestra un modal para agregar un nuevo permiso
+ */
+function showAddPermissionModal() {
+    console.log("Ejecutando showAddPermissionModal");
+    
+    // Crear modal
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.id = 'addPermissionModal';
+    
+    modal.innerHTML = `
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Agregar Nuevo Permiso</h3>
+            
+            <form id="addPermissionForm">
+                <div class="form-group">
+                    <label>Permisos:</label>
+                    <div class="permissions-checkboxes">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permissionCanRead" name="canRead" checked>
+                            <label for="permissionCanRead">Lectura</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permissionCanCreate" name="canCreate">
+                            <label for="permissionCanCreate">Creación</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permissionCanUpdate" name="canUpdate">
+                            <label for="permissionCanUpdate">Actualización</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="permissionCanDelete" name="canDelete">
+                            <label for="permissionCanDelete">Eliminación</label>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="button primary">Guardar Permiso</button>
+                </div>
+            </form>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Mostrar modal
+    modal.style.display = 'block';
+    
+    // Manejar cierre del modal
+    modal.querySelector('.close-modal').addEventListener('click', () => {
+        modal.remove();
+    });
+    
+    // Manejar envío del formulario
+    modal.querySelector('#addPermissionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        // Obtener valores de los checkboxes
+        const canRead = document.getElementById('permissionCanRead').checked;
+        const canCreate = document.getElementById('permissionCanCreate').checked;
+        const canUpdate = document.getElementById('permissionCanUpdate').checked;
+        const canDelete = document.getElementById('permissionCanDelete').checked;
+        
+        try {
+            const permissionData = {
+                CanRead: canRead,
+                CanCreate: canCreate,
+                CanUpdate: canUpdate,
+                CanDelete: canDelete
+            };
+            
+            console.log('Enviando datos de permiso:', permissionData);
+            const response = await apiRequest(API_CONFIG.ENDPOINTS.PERMISSION, 'POST', permissionData);
+            
+            if (response) {
+                // Cerrar modal y recargar datos
+                modal.remove();
+                if (typeof loadPermissionsData === 'function') {
+                    loadPermissionsData();
+                } else {
+                    console.warn('Función loadPermissionsData no encontrada');
+                    location.reload(); // Recargar página como alternativa
+                }
+                alert('Permiso creado correctamente.');
+            } else {
+                alert('Error al crear el permiso.');
+            }
+        } catch (error) {
+            console.error('Error al crear permiso:', error);
+            alert(`Error al crear permiso: ${error.message || 'Error desconocido'}`);
+        }
+    });
+}
+
+/**
+ * Muestra un modal para agregar una nueva asignación de permiso a rol y formulario
+ */
+async function showAddRolFormPermissionModal() {
+    console.log("Ejecutando showAddRolFormPermissionModal");
+    
+    try {
+        // Obtener roles, formularios y permisos disponibles
+        const [roles, forms, permissions] = await Promise.all([
+            apiRequest(API_CONFIG.ENDPOINTS.ROL),
+            apiRequest(API_CONFIG.ENDPOINTS.FORM),
+            apiRequest(API_CONFIG.ENDPOINTS.PERMISSION)
+        ]);
+        
+        if (!roles || roles.length === 0) {
+            alert('No hay roles disponibles para asignar permisos.');
+            return;
+        }
+        
+        if (!forms || forms.length === 0) {
+            alert('No hay formularios disponibles para asignar permisos.');
+            return;
+        }
+        
+        if (!permissions || permissions.length === 0) {
+            alert('No hay permisos disponibles para asignar.');
+            return;
+        }
+        
+        // Crear modal
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.id = 'addRolFormPermissionModal';
+        
+        // Generar opciones para los selects
+        let roleOptions = roles.map(role => `<option value="${role.id}">${role.name}</option>`).join('');
+        let formOptions = forms.map(form => `<option value="${form.id}">${form.name}</option>`).join('');
+        
+        // Preparar una descripción de cada permiso para mostrarlo en el select
+        let permissionOptions = permissions.map(permission => {
+            const permDesc = [];
+            if (permission.canRead) permDesc.push('Lectura');
+            if (permission.canCreate) permDesc.push('Creación');
+            if (permission.canUpdate) permDesc.push('Actualización');
+            if (permission.canDelete) permDesc.push('Eliminación');
+            
+            const description = permDesc.length > 0 ? permDesc.join(', ') : 'Sin permisos';
+            
+            return `<option value="${permission.id}">ID: ${permission.id} - ${description}</option>`;
+        }).join('');
+        
+        modal.innerHTML = `
+            <div class="modal-content">
+                <span class="close-modal">&times;</span>
+                <h3>Asignar Permisos a Rol y Formulario</h3>
+                
+                <form id="addRolFormPermissionForm">
+                    <div class="form-group">
+                        <label for="rolFormPermissionRolId">Rol:</label>
+                        <select id="rolFormPermissionRolId" name="rolId" required>
+                            <option value="">Seleccione un rol</option>
+                            ${roleOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rolFormPermissionFormId">Formulario:</label>
+                        <select id="rolFormPermissionFormId" name="formId" required>
+                            <option value="">Seleccione un formulario</option>
+                            ${formOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rolFormPermissionPermissionId">Permiso:</label>
+                        <select id="rolFormPermissionPermissionId" name="permissionId" required>
+                            <option value="">Seleccione un permiso</option>
+                            ${permissionOptions}
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <button type="submit" class="button primary">Guardar Asignación</button>
+                    </div>
+                </form>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Mostrar modal
+        modal.style.display = 'block';
+        
+        // Manejar cierre del modal
+        modal.querySelector('.close-modal').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        // Manejar envío del formulario
+        modal.querySelector('#addRolFormPermissionForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const rolId = parseInt(document.getElementById('rolFormPermissionRolId').value);
+            const formId = parseInt(document.getElementById('rolFormPermissionFormId').value);
+            const permissionId = parseInt(document.getElementById('rolFormPermissionPermissionId').value);
+            
+            try {
+                const rfpData = {
+                    RolId: rolId,
+                    FormId: formId,
+                    PermissionId: permissionId
+                };
+                
+                console.log('Enviando datos de asignación:', rfpData);
+                const response = await apiRequest(API_CONFIG.ENDPOINTS.ROL_FORM_PERMISSION, 'POST', rfpData);
+                
+                if (response) {
+                    // Cerrar modal y recargar datos
+                    modal.remove();
+                    if (typeof loadRolFormPermissionsData === 'function') {
+                        loadRolFormPermissionsData();
+                    } else {
+                        console.warn('Función loadRolFormPermissionsData no encontrada');
+                        location.reload(); // Recargar página como alternativa
+                    }
+                    alert('Asignación creada correctamente.');
+                } else {
+                    alert('Error al crear la asignación.');
+                }
+            } catch (error) {
+                console.error('Error al crear asignación:', error);
+                alert(`Error al crear asignación: ${error.message || 'Error desconocido'}`);
+            }
+        });
+    } catch (error) {
+        console.error('Error al preparar el modal de asignación:', error);
+        alert('Error al cargar los datos necesarios para la asignación.');
+    }
+}
+
+// Agregar listeners para los botones al cargar el documento
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('Document loaded, configuring permission buttons');
+    
+    // Intentar asignar los eventos inmediatamente
+    const addPermissionBtn = document.getElementById('addPermissionBtn');
+    if (addPermissionBtn) {
+        console.log('Add Permission button found, adding event listener');
+        addPermissionBtn.addEventListener('click', showAddPermissionModal);
+    }
+    
+    const addRolFormPermissionBtn = document.getElementById('addRolFormPermissionBtn');
+    if (addRolFormPermissionBtn) {
+        console.log('Add RolFormPermission button found, adding event listener');
+        addRolFormPermissionBtn.addEventListener('click', showAddRolFormPermissionModal);
+    }
+    
+    // Si los botones no están disponibles ahora, intentarlo después
+    setTimeout(function() {
+        const delayedPermissionBtn = document.getElementById('addPermissionBtn');
+        if (delayedPermissionBtn && !delayedPermissionBtn.onclick) {
+            console.log('Adding delayed event listener to Permission button');
+            delayedPermissionBtn.addEventListener('click', showAddPermissionModal);
+        }
+        
+        const delayedRolFormPermissionBtn = document.getElementById('addRolFormPermissionBtn');
+        if (delayedRolFormPermissionBtn && !delayedRolFormPermissionBtn.onclick) {
+            console.log('Adding delayed event listener to RolFormPermission button');
+            delayedRolFormPermissionBtn.addEventListener('click', showAddRolFormPermissionModal);
+        }
+    }, 1000);
+    
+    // Para la sección roles, asegurarse de que el botón de agregar rol tenga su evento
+    const addRoleBtn = document.getElementById('addRoleBtn');
+    if (addRoleBtn) {
+        console.log('Add Role button found, adding event listener');
+        addRoleBtn.addEventListener('click', function() {
+            if (typeof showAddRoleModal === 'function') {
+                showAddRoleModal();
+            } else {
+                console.error('Function showAddRoleModal not found');
+                alert('Error: Función para agregar rol no encontrada');
+            }
+        });
+    }
+    
+    // Para la sección usuarios, asegurarse de que el botón de agregar usuario tenga su evento
+    const addUserBtn = document.getElementById('addUserBtn');
+    if (addUserBtn) {
+        console.log('Add User button found, adding event listener');
+        addUserBtn.addEventListener('click', function() {
+            if (typeof showAddUserModal === 'function') {
+                showAddUserModal();
+            } else {
+                console.error('Function showAddUserModal not found');
+                alert('Error: Función para agregar usuario no encontrada');
+            }
+        });
+    }
+});
+
+// Exponer las funciones globalmente
+window.showAddPermissionModal = showAddPermissionModal;
+window.showAddRolFormPermissionModal = showAddRolFormPermissionModal;
