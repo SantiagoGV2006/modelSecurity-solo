@@ -281,5 +281,56 @@ namespace WebApplication1.Controllers
                 return StatusCode(500, new { message = $"Error al eliminar permanentemente el usuario con ID {id}" });
             }
         }
+
+        [HttpPost("register")]
+        [ProducesResponseType(typeof(UserDto), 201)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(500)]
+        public async Task<IActionResult> RegisterUser([FromBody] RegisterUserDto registerDto)
+        {
+            if (registerDto == null)
+            {
+                return BadRequest(new { message = "Los datos de registro no pueden ser nulos" });
+            }
+
+            try
+            {
+                // Create the user
+                var userDto = new UserDto
+                {
+                    Name = registerDto.Name,
+                    Email = registerDto.Email,
+                    Password = registerDto.Password
+                };
+
+                var createdUser = await _userBusiness.CreateAsync(userDto);
+                
+                // Assign the appropriate role
+                var rolUserDto = new RolUserDto
+                {
+                    UserId = createdUser.Id,
+                    RolId = registerDto.IsAdmin ? 1 : 2 // Assuming 1 is Admin, 2 is User
+                };
+
+                // We need to inject RolUserBusiness
+                var rolUserBusiness = HttpContext.RequestServices.GetRequiredService<RolUserBusiness>();
+                await rolUserBusiness.CreateAsync(rolUserDto);
+
+                return CreatedAtAction(nameof(GetUserById), new { id = createdUser.Id }, createdUser);
+            }
+            catch (ArgumentException ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (InvalidOperationException ex) when (ex.Message.Contains("Ya existe un usuario con el email"))
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError("Error al registrar usuario: {Error}", ex.Message);
+                return StatusCode(500, new { message = "Error al registrar el usuario" });
+            }
+        }
     }
 }

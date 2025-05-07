@@ -1,27 +1,27 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Si ya está autenticado, redirigir al dashboard
+    // If already authenticated, redirect to dashboard
     if (isAuthenticated()) {
         window.location.href = 'dashboard.html';
         return;
     }
     
-    // Obtener el formulario de login
+    // Get the login form
     const loginForm = document.getElementById('loginForm');
     
-    // Agregar evento de envío al formulario
+    // Add submit event to the form
     loginForm.addEventListener('submit', handleLoginSubmit);
     
     /**
-     * Maneja el envío del formulario de login
+     * Handles login form submission
      */
     async function handleLoginSubmit(event) {
         event.preventDefault();
         
-        // Obtener los valores del formulario
+        // Get form values
         const username = document.getElementById('username').value;
         const password = document.getElementById('password').value;
         
-        // Validar campos
+        // Validate fields
         if (!username || !password) {
             showMessage('loginMessage', 'Por favor, complete todos los campos.', 'error');
             return;
@@ -30,75 +30,28 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             showMessage('loginMessage', 'Iniciando sesión...', 'info');
             
-            // Obtener usuarios para buscar usuario por nombre de usuario
-            const users = await apiRequest(API_CONFIG.ENDPOINTS.USER);
-            
-            if (!users || users.length === 0) {
-                throw new Error('No se encontraron usuarios registrados.');
-            }
-            
-            // Buscar el usuario por nombre o email
-            const user = users.find(u => 
-                (u.name && u.name.toLowerCase() === username.toLowerCase()) || 
-                (u.email && u.email.toLowerCase() === username.toLowerCase())
-            );
-            
-            if (!user) {
-                throw new Error('Usuario no encontrado. Verifique su nombre de usuario o correo electrónico.');
-            }
-            
-            // Verificar contraseña (esto normalmente lo haría el backend de forma segura)
-            if (user.password !== password) {
-                throw new Error('Contraseña incorrecta.');
-            }
-            
-            // Buscar el rol del usuario
-            let rolId = API_CONFIG.ROLES.USER; // Rol por defecto
-            let rolName = 'Usuario';
-            
-            try {
-                // Obtener roles del usuario
-                const rolUsers = await apiRequest(API_CONFIG.ENDPOINTS.ROL_USER);
-                const userRol = rolUsers.find(ru => ru.userId === user.id);
-                
-                if (userRol) {
-                    rolId = userRol.rolId;
-                    
-                    // Obtener detalles del rol
-                    const roles = await apiRequest(API_CONFIG.ENDPOINTS.ROL);
-                    const rol = roles.find(r => r.id === rolId);
-                    
-                    if (rol) {
-                        rolName = rol.name;
-                    }
-                }
-            } catch (roleError) {
-                console.error('Error al obtener el rol del usuario:', roleError);
-                // No fallamos el login por un error en la obtención del rol
-            }
-            
-            // Crear objeto de usuario con la información necesaria
-            const userObj = {
-                id: user.id,
-                username: username,
-                name: user.name || username,
-                email: user.email || '',
-                rolId: rolId,
-                rolName: rolName,
-                token: 'fake-token-' + Math.random().toString(36).substring(2)
+            const loginData = {
+                Username: username,
+                Password: password
             };
             
-            // Guardar datos de usuario
-            saveToStorage('user', userObj);
+            // Call the authentication API
+            const response = await apiRequest(`${API_CONFIG.ENDPOINTS.LOGIN}/authenticate`, 'POST', loginData);
             
-            // Mostrar mensaje de éxito
-            showMessage('loginMessage', '¡Inicio de sesión exitoso! Redirigiendo...', 'success');
-            
-            // Redirigir al dashboard
-            setTimeout(() => {
-                window.location.href = 'dashboard.html';
-            }, 1000);
-            
+            if (response) {
+                // Save user data
+                saveToStorage('user', response);
+                
+                // Show success message
+                showMessage('loginMessage', '¡Inicio de sesión exitoso! Redirigiendo...', 'success');
+                
+                // Redirect to dashboard
+                setTimeout(() => {
+                    window.location.href = 'dashboard.html';
+                }, 1000);
+            } else {
+                throw new Error('Respuesta inválida del servidor');
+            }
         } catch (error) {
             showMessage('loginMessage', error.message || 'Error al iniciar sesión. Inténtelo de nuevo.', 'error');
             console.error('Error al iniciar sesión:', error);
