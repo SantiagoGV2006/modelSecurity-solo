@@ -4,7 +4,7 @@ using Entity.Model;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq; // Agregado para usar métodos LINQ
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Data
@@ -14,14 +14,14 @@ namespace Data
         private readonly RolFormPermissionData _rolFormPermissionData;
         private readonly FormModuleData _formModuleData;
         private readonly FormData _formData;
-        private readonly PermissionData _permissionData; // Añadido para obtener permisos
+        private readonly PermissionData _permissionData;
         private readonly ILogger<MenuData> _logger;
 
         public MenuData(
             RolFormPermissionData rolFormPermissionData,
             FormModuleData formModuleData,
             FormData formData,
-            PermissionData permissionData, // Añadido
+            PermissionData permissionData,
             ILogger<MenuData> logger)
         {
             _rolFormPermissionData = rolFormPermissionData ?? throw new ArgumentNullException(nameof(rolFormPermissionData));
@@ -41,7 +41,7 @@ namespace Data
                 // Crear el menú según el rol
                 var menu = new List<MenuItemDto>();
                 
-                // Para rol admin (supongamos que rolId = 1 es admin)
+                // Para rol admin
                 if (rolId == 1) // Admin
                 {
                     // Menú de administración

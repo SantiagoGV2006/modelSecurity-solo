@@ -61,10 +61,3 @@ C:\Users\User\Desktop\ModelSecurity\Diagram\obj\Debug\Diagram.csproj.AssemblyRef
 C:\Users\User\Desktop\ModelSecurity\Diagram\obj\Debug\Diagram.csproj.CoreCompileInputs.cache
 C:\Users\User\Desktop\ModelSecurity\Diagram\obj\Debug\Diagram.dll
 C:\Users\User\Desktop\ModelSecurity\Diagram\obj\Debug\Diagram.pdb
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\bin\Debug\Diagram.dll.config
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\bin\Debug\Diagram.dll
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\bin\Debug\Diagram.pdb
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\obj\Debug\Diagram.csproj.AssemblyReference.cache
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\obj\Debug\Diagram.csproj.CoreCompileInputs.cache
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\obj\Debug\Diagram.dll
-C:\Users\Santiago\source\repos\ModelSecurity sin PQR\Diagram\obj\Debug\Diagram.pdb

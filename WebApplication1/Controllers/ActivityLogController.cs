@@ -1,5 +1,5 @@
 using Business;
-using Entity.Model;
+using Entity.DTOs;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -24,10 +24,10 @@ namespace WebApplication1.Controllers
 
         // POST: api/ActivityLog
         [HttpPost]
-        [ProducesResponseType(typeof(ActivityLog), 201)]
+        [ProducesResponseType(typeof(ActivityLogDto), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
-        public async Task<IActionResult> CreateLog([FromBody] ActivityLog logDto)
+        public async Task<IActionResult> CreateLog([FromBody] ActivityLogDto logDto)
         {
             try
             {
@@ -56,7 +56,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/ActivityLog
         [HttpGet]
-        [ProducesResponseType(typeof(IEnumerable<ActivityLog>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ActivityLogDto>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetRecentLogs([FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
@@ -74,7 +74,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/ActivityLog/{id}
         [HttpGet("{id}")]
-        [ProducesResponseType(typeof(ActivityLog), 200)]
+        [ProducesResponseType(typeof(ActivityLogDto), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetLogById(int id)
@@ -98,7 +98,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/ActivityLog/user/{userId}
         [HttpGet("user/{userId}")]
-        [ProducesResponseType(typeof(IEnumerable<ActivityLog>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ActivityLogDto>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetLogsByUser(string userId, [FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
@@ -116,7 +116,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/ActivityLog/entity/{entityType}
         [HttpGet("entity/{entityType}")]
-        [ProducesResponseType(typeof(IEnumerable<ActivityLog>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ActivityLogDto>), 200)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetLogsByEntityType(string entityType, [FromQuery] int limit = 100, [FromQuery] int offset = 0)
         {
@@ -134,7 +134,7 @@ namespace WebApplication1.Controllers
 
         // GET: api/ActivityLog/daterange
         [HttpGet("daterange")]
-        [ProducesResponseType(typeof(IEnumerable<ActivityLog>), 200)]
+        [ProducesResponseType(typeof(IEnumerable<ActivityLogDto>), 200)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> GetLogsByDateRange(

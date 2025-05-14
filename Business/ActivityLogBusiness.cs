@@ -30,7 +30,7 @@ namespace Business
         /// <summary>
         /// Registra una actividad en el sistema
         /// </summary>
-        public async Task<ActivityLog> LogActivityAsync(
+        public async Task<ActivityLogDto> LogActivityAsync(
             string userId,
             string userName,
             string action,
@@ -69,7 +69,7 @@ namespace Business
         /// <summary>
         /// Obtiene los logs de actividad más recientes
         /// </summary>
-        public async Task<IEnumerable<ActivityLog>> GetRecentLogsAsync(int limit = 100, int offset = 0)
+        public async Task<IEnumerable<ActivityLogDto>> GetRecentLogsAsync(int limit = 100, int offset = 0)
         {
             try
             {
@@ -86,7 +86,7 @@ namespace Business
         /// <summary>
         /// Obtiene los logs de actividad de un usuario específico
         /// </summary>
-        public async Task<IEnumerable<ActivityLog>> GetLogsByUserAsync(string userId, int limit = 100, int offset = 0)
+        public async Task<IEnumerable<ActivityLogDto>> GetLogsByUserAsync(string userId, int limit = 100, int offset = 0)
         {
             try
             {
@@ -103,7 +103,7 @@ namespace Business
         /// <summary>
         /// Obtiene los logs de actividad de un tipo de entidad específico
         /// </summary>
-        public async Task<IEnumerable<ActivityLog>> GetLogsByEntityTypeAsync(string entityType, int limit = 100, int offset = 0)
+        public async Task<IEnumerable<ActivityLogDto>> GetLogsByEntityTypeAsync(string entityType, int limit = 100, int offset = 0)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace Business
         /// <summary>
         /// Obtiene los logs de actividad en un rango de fechas
         /// </summary>
-        public async Task<IEnumerable<ActivityLog>> GetLogsByDateRangeAsync(DateTime start, DateTime end, int limit = 100, int offset = 0)
+        public async Task<IEnumerable<ActivityLogDto>> GetLogsByDateRangeAsync(DateTime start, DateTime end, int limit = 100, int offset = 0)
         {
             try
             {
@@ -137,7 +137,7 @@ namespace Business
         /// <summary>
         /// Obtiene un log de actividad específico por su ID
         /// </summary>
-        public async Task<ActivityLog> GetLogByIdAsync(int id)
+        public async Task<ActivityLogDto> GetLogByIdAsync(int id)
         {
             try
             {
@@ -152,9 +152,9 @@ namespace Business
         }
 
         // Método privado para mapear de ActivityLog a ActivityLogDto
-        private ActivityLog MapToDTO(ActivityLog log)
+        private ActivityLogDto MapToDTO(ActivityLog log)
         {
-            return new ActivityLog
+            return new ActivityLogDto
             {
                 Id = log.Id,
                 Timestamp = log.Timestamp,

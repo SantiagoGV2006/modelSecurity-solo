@@ -143,69 +143,69 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPatch("{id}")]
-        [ProducesResponseType(typeof(LoginDto), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(404)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> PartialUpdateLogin(int id, [FromBody] JsonPatchDocument<LoginDto> patchDoc)
+[ProducesResponseType(typeof(LoginDto), 200)]
+[ProducesResponseType(400)]
+[ProducesResponseType(404)]
+[ProducesResponseType(500)]
+public async Task<IActionResult> PartialUpdateLogin(int id, [FromBody] JsonPatchDocument<LoginDto> patchDoc)
+{
+    if (patchDoc == null)
+    {
+        return BadRequest(new { message = "El objeto patch no puede ser nulo." });
+    }
+
+    // Validar que solo se puede modificar campos específicos
+    var allowedPaths = new[] { "/Username", "/Password" };  // Asumimos que solo se puede actualizar el nombre de usuario y la contraseña
+
+    foreach (var op in patchDoc.Operations)
+    {
+        // Asegurarse de que el 'path' no tiene espacios adicionales
+        var trimmedPath = op.path.Trim();
+
+        // Verificar si la propiedad está permitida
+        if (!allowedPaths.Contains(trimmedPath, StringComparer.OrdinalIgnoreCase))
         {
-            if (patchDoc == null)
-            {
-                return BadRequest(new { message = "El objeto patch no puede ser nulo." });
-            }
-
-            // Validar que solo se puede modificar campos específicos
-            var allowedPaths = new[] { "/Username", "/Password" };  // Asumimos que solo se puede actualizar el nombre de usuario y la contraseña
-
-            foreach (var op in patchDoc.Operations)
-            {
-                // Asegurarse de que el 'path' no tiene espacios adicionales
-                var trimmedPath = op.path.Trim();
-
-                // Verificar si la propiedad está permitida
-                if (!allowedPaths.Contains(trimmedPath, StringComparer.OrdinalIgnoreCase))
-                {
-                    return BadRequest(new { message = $"Solo se permite modificar los siguientes campos: {string.Join(", ", allowedPaths)}" });
-                }
-            }
-
-            try
-            {
-                var existingLogin = await _loginBusiness.GetByIdAsync(id);
-                if (existingLogin == null)
-                {
-                    return NotFound(new { message = "Login no encontrado." });
-                }
-
-                patchDoc.ApplyTo(existingLogin, error =>
-                {
-                    ModelState.AddModelError(error.Operation.path, error.ErrorMessage);
-                });
-
-                if (!ModelState.IsValid)
-                {
-                    return BadRequest(ModelState);
-                }
-
-                var updatedLogin = await _loginBusiness.UpdateAsync(existingLogin);
-                return Ok(updatedLogin);
-            }
-            catch (ValidationException ex)
-            {
-                _logger.LogWarning(ex, "Validación fallida al actualizar parcialmente el login con ID: {LoginId}", id);
-                return BadRequest(new { message = ex.Message });
-            }
-            catch (EntityNotFoundException ex)
-            {
-                _logger.LogInformation(ex, "Login no encontrado con ID: {LoginId}", id);
-                return NotFound(new { message = ex.Message });
-            }
-            catch (ExternalServiceException ex)
-            {
-                _logger.LogError(ex, "Error al actualizar parcialmente el login con ID: {LoginId}", id);
-                return StatusCode(500, new { message = ex.Message });
-            }
+            return BadRequest(new { message = $"Solo se permite modificar los siguientes campos: {string.Join(", ", allowedPaths)}" });
         }
+    }
+
+    try
+    {
+        var existingLogin = await _loginBusiness.GetByIdAsync(id);
+        if (existingLogin == null)
+        {
+            return NotFound(new { message = "Login no encontrado." });
+        }
+
+        patchDoc.ApplyTo(existingLogin, error =>
+        {
+            ModelState.AddModelError(error.Operation.path, error.ErrorMessage);
+        });
+
+        if (!ModelState.IsValid)
+        {
+            return BadRequest(ModelState);
+        }
+
+        var updatedLogin = await _loginBusiness.UpdateAsync(existingLogin);
+        return Ok(updatedLogin);
+    }
+    catch (ValidationException ex)
+    {
+        _logger.LogWarning(ex, "Validación fallida al actualizar parcialmente el login con ID: {LoginId}", id);
+        return BadRequest(new { message = ex.Message });
+    }
+    catch (EntityNotFoundException ex)
+    {
+        _logger.LogInformation(ex, "Login no encontrado con ID: {LoginId}", id);
+        return NotFound(new { message = ex.Message });
+    }
+    catch (ExternalServiceException ex)
+    {
+        _logger.LogError(ex, "Error al actualizar parcialmente el login con ID: {LoginId}", id);
+        return StatusCode(500, new { message = ex.Message });
+    }
+}
 
         [HttpDelete("{id}")]
         [ProducesResponseType(204)]
@@ -243,71 +243,6 @@ namespace WebApplication1.Controllers
             {
                 _logger.LogError(ex, "Error al eliminar el login con ID: {LoginId}", id);
                 return StatusCode(500, new { message = ex.Message });
-            }
-        }
-        [HttpPost("authenticate")]
-        [ProducesResponseType(typeof(AuthResponseDto), 200)]
-        [ProducesResponseType(400)]
-        [ProducesResponseType(401)]
-        [ProducesResponseType(500)]
-        public async Task<IActionResult> Authenticate([FromBody] LoginRequestDto loginRequest)
-        {
-            if (loginRequest == null || string.IsNullOrEmpty(loginRequest.Username) || string.IsNullOrEmpty(loginRequest.Password))
-            {
-                return BadRequest(new { message = "Nombre de usuario y contraseña son requeridos" });
-            }
-
-            try
-            {
-                // Get user by username or email
-                var userBusiness = HttpContext.RequestServices.GetRequiredService<UserBusiness>();
-                var users = await userBusiness.GetAllAsync();
-                
-                var user = users.FirstOrDefault(u => 
-                    u.Email.Equals(loginRequest.Username, StringComparison.OrdinalIgnoreCase) || 
-                    u.Name.Equals(loginRequest.Username, StringComparison.OrdinalIgnoreCase));
-                
-                if (user == null || user.Password != loginRequest.Password)
-                {
-                    return Unauthorized(new { message = "Nombre de usuario o contraseña incorrectos" });
-                }
-
-                // Get user role
-                var rolUserBusiness = HttpContext.RequestServices.GetRequiredService<RolUserBusiness>();
-                var rolUsers = await rolUserBusiness.GetAllAsync();
-                var userRol = rolUsers.FirstOrDefault(ru => ru.UserId == user.Id);
-                
-                var rolBusiness = HttpContext.RequestServices.GetRequiredService<RolBusiness>();
-                string roleName = "Usuario"; // Default
-                int roleId = 2; // Default to regular user
-                
-                if (userRol != null)
-                {
-                    var role = await rolBusiness.GetRolByIdAsync(userRol.RolId);
-                    if (role != null)
-                    {
-                        roleName = role.Name;
-                        roleId = role.Id;
-                    }
-                }
-
-                // Create simple token (in a real app, use JWT)
-                var response = new AuthResponseDto
-                {
-                    Id = user.Id,
-                    Name = user.Name,
-                    Email = user.Email,
-                    RolId = roleId,
-                    RolName = roleName,
-                    Token = $"demo-token-{Guid.NewGuid()}"
-                };
-
-                return Ok(response);
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error al autenticar usuario");
-                return StatusCode(500, new { message = "Error al procesar el inicio de sesión" });
             }
         }
     }
